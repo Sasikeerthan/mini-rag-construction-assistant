@@ -110,13 +110,6 @@ RAG/
 └── README.md
 ```
 
-## Example Questions
+## Sample Results
+![image1](https://github.com/user-attachments/assets/4e60bf84-0fc0-486b-9351-d9e0eb2124a0)
 
-- "What packages does Indecimal offer and what are their prices?"
-- "How does the payment system work?"
-- "What quality checks are performed during construction?"
-- "What is included in the maintenance program?"
-- "What factors affect construction project delays?"
-- "What steel brands are used in the Pinnacle package?"
-- "How does Indecimal handle home financing?"
-- "What are the flooring options for the Premier package?"
