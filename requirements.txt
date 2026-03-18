@@ -1,0 +1,134 @@
+Build a Mini RAG!
+
+You are working on an AI assistant for a construction marketplace.
+The assistant is expected to answer user questions using provided internal documents (such as policies, FAQs, or specifications) rather than relying solely on the model’s general knowledge.
+This assignment is designed to evaluate your understanding of Retrieval-Augmented Generation (RAG), embeddings, vector search, and LLM-based answer generation, along with your ability to reason about quality and limitations.
+
+Objective
+Build a simple RAG pipeline that:
+Retrieves relevant information from the provided documents
+Generates answers grounded strictly in retrieved content
+Demonstrates clarity, correctness, and explainability
+
+Input
+A small set of short internal documents (policies, FAQs, or specs) will be provided.
+Requirements
+Chunk & Embed Documents
+Use any embedding model:
+OpenRouter (free models), OR\
+Open-source (e.g., sentence-transformers)
+
+
+Vector Search
+Implement semantic retrieval using:
+FAISS (preferred), or
+A simple cosine-similarity–based retrieval approach.
+A local vector store is sufficient. Managed services such as Pinecone are not required.
+
+
+LLM-Based Answer Generation
+Use an LLM to generate answers only from retrieved chunks
+Clearly show:
+Retrieved context
+Final generated answer
+
+
+Transparency and Explainability
+Your output must clearly display:
+The retrieved context (document chunks) used for answering.
+The final generated answer.
+
+
+Model Choice
+You may use either:
+A free OpenRouter LLM, or
+An open-source local LLM (bonus points).
+Example Query
+“What factors affect construction project delays?”
+Deliverables
+Very Important: A deployed working chatbot interface. With a custom frontend 
+A GitHub repository containing:
+Python script(s) or a Jupyter notebook implementing the solution
+Clear instructions for running the project locally
+
+
+A README.md file explaining:
+Which embedding model and LLM were used, and why
+How document chunking and retrieval are implemented
+How grounding to retrieved context is enforced
+Mandatory Requirements
+Your implementation must include the following:
+Document Processing
+Chunk the provided documents into meaningful segments.
+Generate embeddings for each chunk using an embedding model of your choice.
+
+
+Vector Indexing and Retrieval
+Build a local vector index over the document embeddings.
+For each user query, retrieve the top-k most relevant document chunks using semantic similarity.
+
+
+Grounded Answer Generation
+Use a Large Language Model (LLM) to generate answers.
+The LLM must be explicitly instructed to generate responses only from the retrieved document chunks.
+The system should avoid hallucinations and unsupported claims.
+
+
+Transparency
+
+
+Clearly display
+The retrieved document chunks used as context.
+The final generated answer.
+
+
+Completion of the above constitutes a valid submission.
+
+Optional Enhancements (Bonus)
+The following enhancements are not mandatory, but will be considered positively during evaluation:
+Local Open-Source LLM Usage
+
+
+Run an open-source LLM locally (approximately 2B–3B parameters) using tools such as:
+
+
+Ollama, or
+
+
+Hugging Face Transformers.
+
+
+Compare its behavior against an OpenRouter-based LLM in terms of:
+
+
+Answer quality
+
+
+Latency
+
+
+Groundedness to retrieved context
+
+
+Quality Analysis
+
+
+Create 8–15 test questions derived from the provided documents.
+
+
+Perform a basic evaluation of the system, for example:
+
+
+Relevance of retrieved chunks
+
+
+Presence of hallucinations or unsupported claims
+
+
+Completeness and clarity of generated answers
+
+Summarize observations and findings briefly in the README.
+The Documents that can be used for the assessment:
+doc1.md
+doc2.md
+doc3.md
