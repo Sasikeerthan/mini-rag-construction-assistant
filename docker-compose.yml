@@ -34,6 +34,7 @@ services:
         condition: service_completed_successfully
     environment:
       - OLLAMA_HOST=http://ollama:11434
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
     volumes:
       - ./documents:/app/documents
       - rag_cache:/app/.cache
