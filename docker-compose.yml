@@ -25,6 +25,8 @@ services:
   rag-app:
     build: .
     container_name: rag-app
+    env_file:
+      - local.env
     ports:
       - "8501:8501"
     depends_on:
