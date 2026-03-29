@@ -2,6 +2,7 @@
 
 import os
 import time
+import json
 import requests
 
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://ollama:11434")
@@ -55,6 +56,47 @@ def generate_answer(query: str, context_chunks: list[dict]) -> str:
         )
     except requests.RequestException as exc:
         return f"An error occurred while generating the answer: {exc}"
+
+
+def generate_answer_stream(query: str, context_chunks: list[dict]):
+    """Generate an answer using Ollama with streaming, grounded in provided context.
+
+    Yields:
+        str: Token chunks as they arrive from the model.
+    """
+    context_block = _format_context(context_chunks)
+
+    full_prompt = (
+        f"{SYSTEM_PROMPT}\n\n"
+        f"--- Context ---\n{context_block}\n--- End Context ---\n\n"
+        f"Question: {query}\n\n"
+        "Answer:"
+    )
+
+    url = f"{OLLAMA_HOST}/api/generate"
+    payload = {
+        "model": OLLAMA_MODEL,
+        "prompt": full_prompt,
+        "stream": True,
+        "options": {"temperature": 0.3},
+    }
+
+    try:
+        response = requests.post(url, json=payload, timeout=120, stream=True)
+        response.raise_for_status()
+        for line in response.iter_lines():
+            if line:
+                data = json.loads(line)
+                token = data.get("response", "")
+                if token:
+                    yield token
+    except requests.ConnectionError:
+        yield (
+            "Sorry, I'm unable to reach the language model service right now. "
+            "Please try again later."
+        )
+    except requests.RequestException as exc:
+        yield f"An error occurred while generating the answer: {exc}"
 
 
 def wait_for_ollama(timeout: int = 300) -> bool:
