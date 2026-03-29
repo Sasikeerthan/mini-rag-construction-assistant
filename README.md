@@ -32,6 +32,9 @@ A Retrieval-Augmented Generation (RAG) chatbot for **Indecimal**, a construction
 ### LLM: `phi3:mini` (3.8B parameters, via Ollama)
 - **Why**: Open-source local LLM (bonus points), strong instruction-following capability, runs efficiently on CPU via Ollama. Good at grounded QA tasks where the model must stick to provided context. No external API dependencies.
 
+### Cloud LLM: `meta-llama/llama-3.1-8b-instruct:free` (via OpenRouter)
+- **Why**: Free tier on OpenRouter, 8B parameters, strong instruction-following. Provides a cloud-based comparison point against the local phi3:mini model. No local GPU required.
+
 ## Document Chunking & Retrieval
 
 ### Chunking Strategy
@@ -89,26 +92,69 @@ To also remove the downloaded model volume:
 docker compose down -v
 ```
 
+### OpenRouter Setup (Optional — for model comparison)
+
+1. Get a free API key at [openrouter.ai](https://openrouter.ai)
+2. Set the environment variable before running:
+
+```bash
+OPENROUTER_API_KEY=your-key-here docker compose up --build
+```
+
+Or create a `.env` file (see `.env.example`).
+
+### Running the Evaluation
+
+```bash
+# Inside the container or locally with dependencies installed
+OPENROUTER_API_KEY=your-key-here python evaluate.py
+```
+
+This runs 15 test questions through both models and outputs `evaluation_results.md`.
+
 ## Project Structure
 
 ```
 RAG/
-├── app.py                  # Streamlit chat UI
+├── app.py                  # Streamlit chat UI (streaming, model comparison)
+├── evaluate.py             # Automated evaluation script
 ├── rag/
 │   ├── __init__.py
 │   ├── chunker.py          # Markdown-aware document chunking
 │   ├── embedder.py         # Sentence-transformers embedding
 │   ├── retriever.py        # FAISS index + semantic search
-│   └── generator.py        # Ollama LLM integration
+│   ├── generator.py        # Ollama LLM integration (local)
+│   └── openrouter_generator.py  # OpenRouter LLM integration (cloud)
 ├── documents/
 │   ├── doc1.md             # Company overview & customer journey
 │   ├── doc2.md             # Package comparison & specifications
 │   └── doc3.md             # Policies, quality, guarantees
+├── test_questions.csv      # 15 test questions with expected answers
+├── evaluation_results.md   # Model comparison results (generated)
+├── .env.example            # Environment variable template
 ├── Dockerfile
 ├── docker-compose.yml
 ├── pip-requirements.txt    # Python dependencies
 └── README.md
 ```
+
+## Model Comparison Findings
+
+Comparison of Local (phi3:mini, 3.8B) vs OpenRouter (Llama 3.1 8B) across 15 test questions:
+
+| Metric | Local (phi3:mini) | OpenRouter (Llama 3.1 8B) |
+|--------|-------------------|---------------------------|
+| Avg Latency | Higher (CPU inference) | Lower (cloud GPU) |
+| Groundedness | Good — stays within context | Good — stays within context |
+| Key-Point Coverage | Moderate | Higher (larger model captures more detail) |
+
+**Key Observations:**
+- Both models respect the grounding constraint well due to the explicit system prompt
+- The cloud model (Llama 3.1 8B) produces more detailed answers and covers more expected key points
+- The local model (phi3:mini) has higher latency on CPU but requires no API key or internet
+- Streaming responses significantly improve perceived latency for both models
+
+See `evaluation_results.md` for detailed per-question results.
 
 ## Sample Results
 ![image1](https://github.com/user-attachments/assets/4e60bf84-0fc0-486b-9351-d9e0eb2124a0)
