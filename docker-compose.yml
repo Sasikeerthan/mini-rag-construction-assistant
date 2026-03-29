@@ -22,13 +22,27 @@ services:
     environment:
       - OLLAMA_HOST=http://ollama:11434
 
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - rag-app
+    restart: unless-stopped
+
   rag-app:
     build: .
     container_name: rag-app
     env_file:
       - local.env
-    ports:
-      - "8501:8501"
+    expose:
+      - "8501"
     depends_on:
       ollama:
         condition: service_healthy
@@ -44,3 +58,5 @@ services:
 volumes:
   ollama_data:
   rag_cache:
+  caddy_data:
+  caddy_config:

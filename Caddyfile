@@ -1,0 +1,3 @@
+rag.crackwithai.com {
+    reverse_proxy rag-app:8501
+}
